@@ -1,0 +1,79 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: crossborder-mall
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:crossborder_mall}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:your_db_password}
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:your_redis_password}
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 0
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:127.0.0.1}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASS:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: Asia/Shanghai
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+mybatis-plus:
+  type-aliases-package: com.crossborder.mall.entity
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/**/*.xml
+
+jwt:
+  secret: ${JWT_SECRET:please-change-this-jwt-secret-key}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+mall:
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  # 与种子用户手机号一致时，该账号为管理员
+  admin-phones:
+    - ${ADMIN_PHONE:13800138000}
+  seckill:
+    exchange: mall.seckill.exchange
+    queue: mall.seckill.order.queue
+    routing-key: seckill.order
+  order:
+    ttl-ms: ${ORDER_TTL_MS:900000}
+    delay-exchange: mall.order.delay.exchange
+    delay-queue: mall.order.delay.queue
+    delay-routing-key: order.delay
+    process-exchange: mall.order.process.exchange
+    close-queue: mall.order.close.queue
+    close-routing-key: order.close
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.crossborder.mall: info

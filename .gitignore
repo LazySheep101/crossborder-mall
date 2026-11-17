@@ -1,0 +1,23 @@
+# 构建产物
+**/target/
+**/node_modules/
+**/dist/
+**/uploads/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# 环境变量与真实配置（保留 *.example）
+.env
+.env.local
+.env.*.local
+**/src/main/resources/application.yml
+**/src/main/resources/application-dev.yml
+**/src/main/resources/application-prod.yml
+
+# 日志
+*.log
+logs/

@@ -1,6 +1,8 @@
 ﻿# 跨境商城
 
-> 前后端分离的跨境零售演示系统 · By [LazySheep101](https://github.com/LazySheep101)
+> 前后端分离的跨境零售演示系统 · By [LazySheep101](https://github.com/LazySheep101)  
+> **整体说明（推荐先读）**：[架构说明.md](架构说明.md)  
+> **分层索引**：[docs/项目分层介绍.md](docs/项目分层介绍.md)
 
 基于 **Spring Boot 3.5 + Vue 3** 的交易型商城：商品 / SKU、购物车、下单、模拟支付、超时关单，以及 Redis Lua 秒杀。
 
@@ -8,7 +10,9 @@
 
 | 你想了解 | 打开 |
 |----------|------|
-| **分层总览** | [docs/项目分层介绍.md](docs/项目分层介绍.md) |
+| **整体说明** | [架构说明.md](架构说明.md) |
+| **分层总览 + 各层入口** | [docs/项目分层介绍.md](docs/项目分层介绍.md) |
+| 某一层仔细讲 | [docs/层/使用层.md](docs/层/使用层.md) 起 |
 | 建库 | [docs/数据库初始化说明.md](docs/数据库初始化说明.md) |
 | 产品范围 | [docs/完整跨境商城产品规划.md](docs/完整跨境商城产品规划.md) |
 | 落地勾选 | [docs/完整商城落地清单.md](docs/完整商城落地清单.md) |
@@ -25,18 +29,20 @@
 
 **管理端**（管理员手机号登录后）：商品 / SKU、分类、订单发货、秒杀活动与库存预热、看板
 
-演示管理员：把 `.env` / 配置里的 `ADMIN_PHONE` 设成你用来登录的手机号（种子里常用 `13800138000`）。验证码打印在后端日志，不发送真实短信。
+演示管理员：把 `.env` / 配置里的 `ADMIN_PHONE` 设成你用来登录的手机号。验证码打印在后端日志，不发送真实短信。
 
 ## 目录结构
 
 ```text
 crossborder-mall/
 ├── README.md
-├── docs/                        # 分层与产品说明
+├── 架构说明.md                 # 项目总说明
+├── docs/                       # 分层、各层细分、产品与建库
+│   └── 层/                     # 使用 / 接入 / 安全 / 业务 / 异步 / 缓存 / 数据
 ├── docker-compose.yml
 ├── .env.example
-├── crossborder-mall-backend/    # 后端与 SQL
-└── crossborder-mall-frontend/   # 前端
+├── crossborder-mall-backend/   # 后端与 SQL
+└── crossborder-mall-frontend/  # 前端
 ```
 
 ## 快速开始
@@ -59,17 +65,18 @@ cp src/main/resources/application-dev.yml.example \
    src/main/resources/application-dev.yml
 ```
 
-创建库 `crossborder_mall`（utf8mb4），按顺序执行：
+创建库 `crossborder_mall`（utf8mb4），按顺序执行（详见 [docs/数据库初始化说明.md](docs/数据库初始化说明.md)）：
 
 ```text
 src/main/resources/db/crossborder_mall.sql
 src/main/resources/db/cb_mall_commerce.sql
 src/main/resources/db/cb_mall_trade.sql
 src/main/resources/db/cb_mall_seckill.sql
+src/main/resources/db/cb_mall_demo_seed.sql   # 可选：更多带图演示商品
 src/main/resources/db/cb_mall_drop_legacy.sql
 ```
 
-把 MySQL、Redis、RabbitMQ、JWT 配进配置或环境变量后：
+把 MySQL、Redis、RabbitMQ、JWT、`ADMIN_PHONE` 配进配置或环境变量后：
 
 ```bash
 mvn clean package -DskipTests
@@ -86,7 +93,7 @@ npm install
 npm run dev
 ```
 
-接口默认走 Vite 代理到 `http://localhost:8081`。前台：`http://localhost:3000/`
+接口默认走 Vite 代理到后端。前台：`http://localhost:3000/`
 
 ### Docker Compose
 
